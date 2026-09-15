@@ -29,7 +29,7 @@ jobs:
 
       - name: Integrate Dynamic Rock Arcade
         run: |
-          python3 -c "from pathlib import Path; p=Path('index.html'); s=p.read_text(encoding='utf-8'); tags=['<script src=\"dynamic-rock-arcade.js\" defer></script>','<script src=\"kerala-360.js\" defer></script>']; [globals() for _ in [0]]; [None for t in tags if t in s or not s.replace('</body>', t+'\\n</body>')]; [setattr(__import__('builtins'),'_rock_s',None) for _ in []]; import functools; s=functools.reduce(lambda x,t: x if t in x else x.replace('</body>',t+'\\n</body>'),tags,s); p.write_text(s,encoding='utf-8')"
+          python3 -c "from pathlib import Path; import functools; p=Path('index.html'); s=p.read_text(encoding='utf-8'); tags=['<script src=\"dynamic-rock-arcade.js\" defer></script>','<script src=\"kerala-360.js\" defer></script>']; s=functools.reduce(lambda value,tag: value if tag in value else value.replace('</body>',tag+'\\n</body>'),tags,s); p.write_text(s,encoding='utf-8')"
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
