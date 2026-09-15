@@ -13,6 +13,7 @@ style.textContent=`
 :root[data-rock-interaction="arcade"]{--rock-press:1;--rock-impact:0}
 .rock-button-press{transform:translateY(3px) scale(.93)!important;filter:brightness(1.14) saturate(1.12)!important}
 #fire.rock-button-press{transform:translateY(5px) scale(.88)!important;filter:brightness(1.2) saturate(1.2)!important}
+#fire{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .move button{position:relative;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .09s cubic-bezier(.2,.8,.2,1),filter .09s,background .09s,box-shadow .12s}
 .move button::after{content:"";position:absolute;inset:5px;border:2px solid currentColor;border-radius:14px;opacity:0;transform:scale(.78);pointer-events:none}
 .move button.rock-move-held{transform:translateY(4px) scale(.9)!important;filter:brightness(1.18) saturate(1.15)!important;background:#fff3!important;box-shadow:inset 0 5px 0 #0003,0 3px 0 #0005!important}
@@ -56,6 +57,7 @@ moveButtons.forEach(button=>{
  button.addEventListener('pointercancel',release);
  button.addEventListener('lostpointercapture',release);
 });
+let suppressNativeFireClick=false;
 function fireFeedback(){
  press(fire);ripple();
  if(crosshair&&!reduced){crosshair.classList.remove('rock-hit-flash');void crosshair.offsetWidth;crosshair.classList.add('rock-hit-flash');}
@@ -63,8 +65,30 @@ function fireFeedback(){
  if(!reduced){void document.body.offsetWidth;document.body.classList.add('rock-game-shake');}
  window.dispatchEvent(new CustomEvent('rock:fire',{detail:{weapon:$$('.weapon').findIndex(x=>x.classList.contains('active'))}}));
 }
-fire.addEventListener('pointerdown',fireFeedback,{passive:true});
-fire.addEventListener('click',()=>window.dispatchEvent(new Event('rock:fire-confirmed')));
+fire.addEventListener('pointerdown',e=>{
+ e.preventDefault();
+ try{fire.setPointerCapture(e.pointerId)}catch{}
+ fireFeedback();
+ // Fire immediately on press so device rotation/orientation changes cannot cancel the shot.
+ suppressNativeFireClick=true;
+ clearTimeout(fire._rockClickReset);
+ fire._rockClickReset=setTimeout(()=>{suppressNativeFireClick=false},450);
+ fire.click();
+},{passive:false});
+fire.addEventListener('pointerup',e=>{e.preventDefault();try{fire.releasePointerCapture(e.pointerId)}catch{}},{passive:false});
+fire.addEventListener('pointercancel',()=>{suppressNativeFireClick=false});
+fire.addEventListener('lostpointercapture',()=>{});
+fire.addEventListener('click',e=>{
+ if(suppressNativeFireClick){suppressNativeFireClick=false;return;}
+ window.dispatchEvent(new Event('rock:fire-confirmed'));
+});
+window.addEventListener('orientationchange',()=>{
+ // Do not leave the FIRE interaction in a stale visual/gesture state after rotation.
+ fire.classList.remove('rock-button-press');
+ clearTimeout(fire._rockClickReset);
+ suppressNativeFireClick=false;
+});
+window.addEventListener('resize',()=>{fire.classList.remove('rock-button-press')});
 $$('.icon,.primary').forEach(b=>b.addEventListener('pointerdown',()=>press(b),{passive:true}));
 function weaponFeedback(b){
  if(!b)return;
