@@ -15,7 +15,7 @@
     #kerala360 .hint{position:absolute;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);padding:10px 15px;border:1px solid #ffffff26;border-radius:15px;background:#07130dcc;backdrop-filter:blur(16px);font-size:12px;white-space:nowrap}
     #kerala360 .close{position:absolute;right:18px;top:max(18px,env(safe-area-inset-top));width:44px;height:44px;border:1px solid #ffffff2b;border-radius:15px;background:#07130dcc;color:#fff;font-size:20px;pointer-events:auto}
     #kerala360 .pin{position:absolute;padding:7px 10px;border-radius:12px;background:#07130dcc;border:1px solid #ffffff24;backdrop-filter:blur(12px);font-size:11px;font-weight:700;transform:translate(-50%,-50%)}
-    #kerala360 .pin:nth-of-type(1){left:27%;top:54%}.pin:nth-of-type(2){left:50%;top:47%}.pin:nth-of-type(3){left:73%;top:58%}
+    #kerala360 .pin:nth-of-type(1){left:22%;top:55%}.pin:nth-of-type(2){left:44%;top:48%}.pin:nth-of-type(3){left:66%;top:56%}.pin:nth-of-type(4){left:84%;top:46%}
     @media(max-width:600px){#kerala360 .hint{font-size:11px;max-width:82vw;text-align:center;white-space:normal}}
   `;
   document.head.appendChild(style);
@@ -23,7 +23,7 @@
   const root = document.createElement('section');
   root.id = 'kerala360';
   root.setAttribute('aria-label', 'കേരളം 360 കാഴ്ച');
-  root.innerHTML = `<div class="scene"><div class="mountains"></div><div class="palms"></div><div class="water"></div></div><div class="hud"><div class="title">കേരളം · 360°</div><button class="close" aria-label="അടയ്ക്കുക">×</button><div class="pin">കൊച്ചി</div><div class="pin">ആലപ്പുഴ</div><div class="pin">മുന്നാർ</div><div class="hint">വലത്തോട്ടോ ഇടത്തോട്ടോ ഡ്രാഗ് ചെയ്യുക · 360° കാഴ്ച</div></div>`;
+  root.innerHTML = `<div class="scene"><div class="mountains"></div><div class="palms"></div><div class="water"></div></div><div class="hud"><div class="title">കേരളം · 360°</div><button class="close" aria-label="അടയ്ക്കുക">×</button><div class="pin">കാസർഗോഡ്</div><div class="pin">കോഴിക്കോട്</div><div class="pin">കൊച്ചി</div><div class="pin">ആലപ്പുഴ</div><div class="hint">വലത്തോട്ടോ ഇടത്തോട്ടോ ഡ്രാഗ് ചെയ്യുക · 360° കാഴ്ച</div></div>`;
   document.body.appendChild(root);
 
   const scene = root.querySelector('.scene');
